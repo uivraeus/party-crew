@@ -1,0 +1,24 @@
+{
+  "name": "party-crew",
+  "version": "1.0.0",
+  "description": "Two friends having a good time",
+  "main": "main.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/uivraeus/party-crew.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "keywords": [],
+  "author": "uivraeus",
+  "license": "ISC",
+  "dependencies": {
+    "web-audio-beat-detector": "^8.0.27"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

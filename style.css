@@ -1,0 +1,81 @@
+html {
+  font-size: 10px;
+  background-image: linear-gradient(to bottom right, rgb(247, 244, 221), rgb(173, 171, 150));
+}
+
+body,html {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  overflow: hidden;
+}
+
+@keyframes welcomeGrow {
+  0% {
+      font-size: 10px;
+  }
+  100% {
+      font-size: 13vmin;
+  }
+}
+
+@keyframes diggingPulse {
+    0%, 100% {
+        font-size: 13vmin;
+    }
+    30% {
+        font-size: var(--dig_amp)
+    }
+}
+
+@keyframes infiniteSpin {
+   from {
+     transform: rotate(0deg);
+   }
+   to {
+     transform: rotate(360deg);
+   }
+ }
+    
+ #visualizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.lineup {
+  display: flex;
+  flex: 1;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  animation: welcomeGrow 1s ease-out 0s 1 forwards;
+  --dig_t: 1.0s;
+  --flip_t: 2.0s;
+  --dig_amp: 14vmin;
+  z-index: 0;
+}
+
+.fellow {
+  flex: 1;  
+  align-items: center;
+  justify-content: center;
+  display: flex;  
+}
+
+.digging.flipping {
+  animation: diggingPulse var(--dig_t) ease-out 0s infinite both, infiniteSpin var(--flip_t) 1;
+}
+
+.digging {
+  animation: diggingPulse var(--dig_t) ease-out 0s infinite both;
+}
+
+.flipping {
+  animation: infiniteSpin var(--flip_t) 1;
+}
+
+
