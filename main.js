@@ -9,14 +9,14 @@ const canvas = document.querySelector("#visualizer");
 const canvasCtx = canvas.getContext("2d")
 
 
-const mainAudioCtx = new AudioContext()
+let mainAudioCtx = null;
 let mainBeat = undefined;
 
 function toggleShow(e) {
   const show = document.querySelector(`#show`);
   if (show.dataset.playing === "true") {
     show.dataset.playing = "false";
-    stopBeat()
+    stopBeat();
   } else {
     if (mainBeat !== null) {
       show.dataset.playing = "true";
@@ -33,8 +33,15 @@ function toggleShow(e) {
 }
 
 function startTheShow() {
+  document.getElementById("user-message").innerHTML = "Loading...";
+  
+  if (!mainAudioCtx) {
+    mainAudioCtx = new AudioContext();
+  }
   getBeatBuffer(mainAudioCtx)
   .then(buffer => {
+    document.getElementById("user-message").innerHTML = "Starting...";
+    
     // Update/init global status (bpm/offset set below after "guess" call)
     mainBeat = { buffer, bpm: 0, offset: 0 };
     guess(buffer)
@@ -63,6 +70,9 @@ function playBeat() {
       mainBeat.source.connect(mainAudioCtx.destination);
       mainBeat.source.loop = true;
       mainBeat.source.start();
+
+      document.getElementById("user-message").innerHTML = "";
+
       setupChoreography();
       mainBeat.classifiers = [
         initFreqSumClassifier('midFreqSum', 5, 10, 20),
@@ -83,15 +93,18 @@ function stopBeat() {
     if (mainBeat) {
       mainBeat.source = undefined;
     }
+    document.getElementById("user-message").innerHTML = "click to start again";
   }, 150);
 }
 
 function getBeatBuffer(audioCtx) {
   // Fetch the beat from an online source. Unfortunately I don't get a response with
-  // Access-Control-Allow-Origin so I try a CORS proxy I stumbled upon.
-  const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+  // Access-Control-Allow-Origin so I route it via a "proxy api".
   const srcUrl = document.querySelector('#beat').src;
-  return fetch(proxyUrl + srcUrl)
+  const proxyUrl = window.location.hostname === "localhost"
+  ? "https://cors-anywhere.herokuapp.com"
+  : "/cors-proxy";
+  return fetch(`${proxyUrl}/${srcUrl}`)
     .then(response => response.arrayBuffer())
     .then(buffer => audioCtx.decodeAudioData(buffer))
     .then(buffer => buffer);    
