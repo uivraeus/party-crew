@@ -101,10 +101,8 @@ function getBeatBuffer(audioCtx) {
   // Fetch the beat from an online source. Unfortunately I don't get a response with
   // Access-Control-Allow-Origin so I route it via a "proxy api".
   const srcUrl = document.querySelector('#beat').src;
-  const proxyUrl = window.location.hostname === "localhost"
-  ? "https://cors-anywhere.herokuapp.com"
-  : "/cors-proxy";
-  return fetch(`${proxyUrl}/${srcUrl}`)
+  const proxyApi = "/cors-proxy";
+  return fetch(`${proxyApi}/${srcUrl}`)
     .then(response => response.arrayBuffer())
     .then(buffer => audioCtx.decodeAudioData(buffer))
     .then(buffer => buffer);    
